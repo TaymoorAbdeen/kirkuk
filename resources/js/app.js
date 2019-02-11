@@ -6,9 +6,60 @@
  */
 
 require('./bootstrap');
-
 window.Vue = require('vue');
+import { Form, HasError, AlertError } from 'vform';
+import moment from 'moment';
 
+// import { createDecipher } from 'crypto';
+
+
+window.Form = Form;
+Vue.component(HasError.name, HasError)
+Vue.component(AlertError.name, AlertError)
+
+import VueRouter from 'vue-router'
+Vue.use(VueRouter)
+
+import swal from 'sweetalert2'
+window.swal = swal;
+const toast = swal.mixin({
+    toast: true,
+    position: 'top-end',
+    showConfirmButton: false,
+    timer: 3000
+  });
+window.toast = toast;
+
+window.Fire = new Vue();
+
+import VueProgressBar from 'vue-progressbar'
+Vue.use(VueProgressBar, {
+  color: 'rgb(143, 255, 199)',
+  failedColor: 'red',
+  height: '2px'
+})
+
+let routes = [
+    { path: '/dashborad', component: require('./components/Dashborad.vue').default },
+    { path: '/users', component: require('./components/Users.vue').default },
+    { path: '/profile', component: require('./components/Profile.vue').default }
+]
+const router = new VueRouter({
+    mode:'history',
+    routes // short for `routes: routes`
+})
+
+Vue.filter('upText', function (text) {
+    // make all chars capital
+    // return text.toUpperCase();
+
+    // make first char capital
+    return text.charAt(0).toUpperCase() + text.slice(1);
+
+});
+Vue.filter('dateOnly', function (created) {
+    return moment(created).format("MMMMM Do YYYY");
+});
 /**
  * The following block of code may be used to automatically register your
  * Vue components. It will recursively scan this directory for the Vue
@@ -29,5 +80,6 @@ Vue.component('example-component', require('./components/ExampleComponent.vue').
  */
 
 const app = new Vue({
-    el: '#app'
+    el: '#app',
+    router
 });
